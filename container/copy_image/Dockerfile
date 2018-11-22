@@ -26,6 +26,7 @@ LABEL TencentHubComponent='{\
     {"name": "TO_HUB_USER", "desc": "必填，复制的镜像仓库用户名"},\
     {"name": "TO_HUB_TOKEN", "desc": "必填，复制的镜像仓库用户token"},\
     {"name": "TO_IMAGE", "desc": "必填, 复制的目标镜像"}\
+    {"name": "_WORKFLOW_FLAG_DIND", "default":"true", "desc": "工作流系统标志位"}\
   ],\
   "output": [\
     {"name": "IMAGE_ID", "desc": "复制后新镜像生成的Image ID"},\
