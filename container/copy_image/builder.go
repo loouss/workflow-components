@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 )
 
 const baseSpace = "/root/src"
@@ -13,17 +14,17 @@ const baseSpace = "/root/src"
 // Builder is
 type Builder struct {
 	// 用户提供参数, 通过环境变量传入
-	Image          string
+	Image    string
 	HubUser  string
 	HubToken string
 
-	ToImage          string
+	ToImage    string
 	ToHubUser  string
 	ToHubToken string
 
 	imageTag string
-	hub           string
-	toHub           string
+	hub      string
+	toHub    string
 }
 
 // NewBuilder is
@@ -59,7 +60,6 @@ func NewBuilder(envs map[string]string) (*Builder, error) {
 	if imageAndTag := strings.Split(b.ToImage, ":"); len(imageAndTag) <= 1 {
 		b.ToImage = fmt.Sprintf("%s:%s", b.ToImage, b.imageTag)
 	}
-
 
 	b.ToHubUser = envs["TO_HUB_USER"]
 	b.ToHubToken = envs["TO_HUB_TOKEN"]
@@ -124,7 +124,6 @@ func (b *Builder) run() error {
 	return nil
 }
 
-
 func (b *Builder) pull(imageURL string) error {
 	var command = []string{"docker", "pull", imageURL}
 	if _, err := (CMD{Command: command}).Run(); err != nil {
@@ -155,8 +154,6 @@ func (b *Builder) tag(oldImage, newImage string) error {
 	return nil
 }
 
-
-
 func (b *Builder) loginRegistry(hub, user, token string) error {
 	var command = []string{"docker", "login", hub, "-u", user, "-p", token}
 	if _, err := (CMD{Command: command}).Run(); err != nil {
@@ -166,7 +163,6 @@ func (b *Builder) loginRegistry(hub, user, token string) error {
 	fmt.Println("docker login succ.")
 	return nil
 }
-
 
 func (b *Builder) pluckImageID(imageURL string) error {
 	// docker inspect hub.cloud.tencent.com/tencenthub/docker_builder:latest --format '{{.Id}}'
@@ -242,7 +238,9 @@ type CMD struct {
 }
 
 func (c CMD) Run() (string, error) {
-	fmt.Println("Run CMD: ", strings.Join(c.Command, " "))
+	cmdStr := strings.Join(c.Command, " ")
+	var cstZone = time.FixedZone("CST", 8*3600)
+	fmt.Printf("[%s] Run CMD: %s\n", time.Now().In(cstZone).Format("2006-01-02 15:04:05"), cmdStr)
 
 	cmd := exec.Command(c.Command[0], c.Command[1:]...)
 	if c.WorkDir != "" {

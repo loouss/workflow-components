@@ -23,7 +23,8 @@ func init() {
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyz")
 
 func StrNow() string {
-	t := time.Now()
+	var cstZone = time.FixedZone("CST", 8*3600)
+	t := time.Now().In(cstZone)
 	year, month, day := t.Date()
 	hour, min, _ := t.Clock()
 	return fmt.Sprintf("%d%02d%02d%02d%02d", year, month, day, hour, min)

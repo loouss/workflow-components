@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os/exec"
 	"strings"
-	"io/ioutil"
+	"time"
 )
 
 // const baseSpace = "/root/src"
@@ -12,10 +13,10 @@ import (
 // Builder is
 type Builder struct {
 	Username    string
-	Password         string
-	Certificate        string
-	Server          string
-	Command string
+	Password    string
+	Certificate string
+	Server      string
+	Command     string
 }
 
 // NewBuilder is
@@ -25,7 +26,7 @@ func NewBuilder(envs map[string]string) (*Builder, error) {
 	if envs["USERNAME"] == "" {
 		return nil, fmt.Errorf("envionment variable USERNAME is required")
 	}
-	b.Username =  envs["USERNAME"]
+	b.Username = envs["USERNAME"]
 
 	if envs["PASSWORD"] == "" {
 		return nil, fmt.Errorf("envionment variable PASSWORD is required")
@@ -108,14 +109,15 @@ func (b *Builder) runCommand() error {
 	return nil
 }
 
-
 type CMD struct {
 	Command []string // cmd with args
 	WorkDir string
 }
 
 func (c CMD) Run() (string, error) {
-	fmt.Println("Run CMD: ", strings.Join(c.Command, " "))
+	cmdStr := strings.Join(c.Command, " ")
+	var cstZone = time.FixedZone("CST", 8*3600)
+	fmt.Printf("[%s] Run CMD: %s\n", time.Now().In(cstZone).Format("2006-01-02 15:04:05"), cmdStr)
 
 	cmd := exec.Command(c.Command[0], c.Command[1:]...)
 	if c.WorkDir != "" {

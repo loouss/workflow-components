@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
-	"os"
-	"path/filepath"
 )
 
 const baseSpace = "/root/src"
@@ -29,7 +29,6 @@ type Builder struct {
 // NewBuilder is
 func NewBuilder(envs map[string]string) (*Builder, error) {
 	b := &Builder{}
-
 
 	if envs["GIT_CLONE_URL"] != "" {
 		b.GitCloneURL = envs["GIT_CLONE_URL"]
@@ -158,7 +157,8 @@ type CMD struct {
 
 func (c CMD) Run() (string, error) {
 	cmdStr := strings.Join(c.Command, " ")
-	fmt.Printf("[%s] Run CMD: %s\n", time.Now().Format("2006-01-02 15:04:05"), cmdStr)
+	var cstZone = time.FixedZone("CST", 8*3600)
+	fmt.Printf("[%s] Run CMD: %s\n", time.Now().In(cstZone).Format("2006-01-02 15:04:05"), cmdStr)
 
 	cmd := exec.Command(c.Command[0], c.Command[1:]...)
 	if c.WorkDir != "" {
