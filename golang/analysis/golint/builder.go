@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	baseSpace = "/go/src"
+	baseSpace  = "/go/src"
 	cacheSpace = "/workflow-cache"
 )
 
@@ -109,7 +109,6 @@ func (b *Builder) gitReset() error {
 }
 
 func (b *Builder) build() error {
-	cwd, _ := os.Getwd()
 	var script string
 	if b.LintPackage == "" {
 		script = "golint `go list ./...`"
@@ -119,6 +118,7 @@ func (b *Builder) build() error {
 	var command = []string{"sh", "-c", script}
 	if _, err := (CMD{command, b.gitDir}).Run(); err != nil {
 		fmt.Printf("Exec: %s failed: %v", script, err)
+		return err
 	}
 	fmt.Printf("Exec: %s succeed.\n", script)
 	return nil
