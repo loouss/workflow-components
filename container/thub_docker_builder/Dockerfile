@@ -11,11 +11,11 @@ go build -v -o /go/bin/component-docker \
 ./*.go
 
 FROM ubuntu:18.04
-RUN apt-get -y update && apt-get -y install docker.io && apt-get -y install git
-#RUN mkdir -p /root/src
-#WORKDIR /root/src
-WORKDIR /var/www/php
+RUN apt-get -yqq update && apt-get -yqq install docker.io && apt-get -yqq install git
+RUN mkdir -p /root/src
+WORKDIR /root/src
 COPY --from=builder /go/bin/component-docker /usr/bin/
+ADD ARTIFACT_URL /root/src
 CMD ["component-docker"]
 
 LABEL TencentHubComponent='{\
