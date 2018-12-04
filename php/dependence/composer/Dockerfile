@@ -32,6 +32,8 @@ ADD / /root/src
 
 WORKDIR /root/src
 
+COPY component-composer builder.php ./
+
 CMD ./component-composer
 # CMD ./bin/containerops-php Composer
 
