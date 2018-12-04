@@ -29,7 +29,7 @@ RUN apk --update add \
 
 RUN mkdir -p /root/src
 ADD / /root/src
-COPY ./builder.php ./component-composer ./
+COPY builder.php component-composer ./
 
 WORKDIR /root/src
 
