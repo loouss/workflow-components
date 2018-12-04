@@ -1,6 +1,8 @@
 FROM composer:1.7.2
 MAINTAINER foxzhong <foxzhong@tencent.com>
 
+COPY component-composer builder.php ./
+
 # Packages
 RUN apk --update add \
     autoconf \
@@ -31,8 +33,6 @@ RUN mkdir -p /root/src
 ADD / /root/src
 
 WORKDIR /root/src
-
-COPY component-composer builder.php ./
 
 CMD ./component-composer
 # CMD ./bin/containerops-php Composer
