@@ -1,13 +1,31 @@
 FROM composer:1.7.2
 MAINTAINER foxzhong <foxzhong@tencent.com>
 
-RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
-    && docker-php-ext-install -j$(nproc) iconv \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd
+# Packages
+RUN apk --update add \
+    autoconf \
+    build-base \
+    curl \
+    git \
+    subversion \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libmcrypt-dev \
+    libpng-dev \
+    libbz2 \
+    libstdc++ \
+    libxslt-dev \
+    openldap-dev \
+    make \
+    unzip \
+    wget && \
+    docker-php-ext-install bcmath mcrypt zip bz2 mbstring pcntl xsl && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-install gd && \
+    docker-php-ext-configure ldap --with-libdir=lib/ && \
+    docker-php-ext-install ldap && \
+    apk del build-base && \
+    rm -rf /var/cache/apk/*
 
 RUN mkdir -p /root/src
 ADD / /root/src
