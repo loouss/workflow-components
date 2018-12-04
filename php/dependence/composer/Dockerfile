@@ -17,6 +17,7 @@ RUN apk --update add \
     openldap-dev \
     make \
     unzip \
+    bzip2-dev \
     wget && \
     docker-php-ext-install bcmath zip bz2 mbstring pcntl xsl && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
